@@ -3,12 +3,20 @@ using CleanArchitecture.Infrastructure.Data;
 using CleanArchitecture.Domain.Interface;
 using CleanArchitecture.Infrastructure.Repositories;
 using CleanArchitecture.Application.Services;
+using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
+using CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add SQLite
 builder.Services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Mediator added
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(
+        typeof(CreateBlogCommand).Assembly));
+
 
 // Dependency Injection
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
