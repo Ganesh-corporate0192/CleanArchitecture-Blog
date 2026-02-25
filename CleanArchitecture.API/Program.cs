@@ -8,7 +8,7 @@ using CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add SQLite
+// Add SQLServer
 builder.Services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
