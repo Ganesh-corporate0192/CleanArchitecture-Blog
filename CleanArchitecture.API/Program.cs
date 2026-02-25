@@ -1,4 +1,4 @@
-using CleanArchitecture.Application.Behaviors;
+﻿using CleanArchitecture.Application.Behaviors;
 using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
 using CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs;
 using CleanArchitecture.Application.Mappings;
@@ -15,6 +15,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add SQLServer
 builder.Services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Register CORS (ADD HERE)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 
 // Register MediatR
 builder.Services.AddMediatR(cfg =>
@@ -52,6 +65,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// ✅ Enable CORS (ADD HERE — very important position)
+app.UseCors("AllowAngular");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
