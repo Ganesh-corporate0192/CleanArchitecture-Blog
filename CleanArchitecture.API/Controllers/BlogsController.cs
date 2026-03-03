@@ -19,8 +19,12 @@ public class BlogsController(IMediator mediator) : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var result = await _mediator.Send(new GetBlogByIdQuery(id));
-        return Ok(result);
+        var blog = await _mediator.Send(new GetBlogByIdQuery(id));
+
+        if (blog == null)
+            return NotFound(new { Message = "Blog not found" });
+
+        return Ok(blog);
     }
 
     [HttpPost]

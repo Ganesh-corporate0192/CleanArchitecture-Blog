@@ -1,8 +1,9 @@
 ﻿using MediatR;
-using CleanArchitecture.Application.DTOs;
+using CleanArchitecture.Domain.Entities;
 
-namespace CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs;
-
-public class GetAllBlogsQuery : IRequest<IEnumerable<BlogResponseDto>>
+namespace CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs
 {
+    public class GetAllBlogsQuery : IRequest<List<Blog>>
+    {
+    }
 }

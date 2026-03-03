@@ -1,4 +1,6 @@
-﻿using CleanArchitecture.Application.Behaviors;
+﻿using CleanArchitecture.API.Middleware;
+using CleanArchitecture.Application.Behaviors;
+using CleanArchitecture.Application.Common;
 using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
 using CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs;
 using CleanArchitecture.Application.Mappings;
@@ -8,7 +10,6 @@ using CleanArchitecture.Infrastructure.Repositories;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using CleanArchitecture.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,8 +48,9 @@ builder.Services.AddAutoMapper(
     typeof(BlogMappingProfile).Assembly);
 
 // Dependency Injection
-builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-
+builder.Services.AddScoped<IBlogRepository, BlogRepository>(); // EF
+builder.Services.AddScoped<IBlogQueryRepository, BlogQueryRepository>(); // Dapper
+builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

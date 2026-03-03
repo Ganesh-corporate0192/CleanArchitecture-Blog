@@ -1,32 +1,24 @@
 ﻿using MediatR;
-using CleanArchitecture.Domain.Interface;
-using CleanArchitecture.Application.DTOs;
+using CleanArchitecture.Application.Common;
+using CleanArchitecture.Domain.Entities;
 
-namespace CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs;
-
-public class GetAllBlogsQueryHandler
-    : IRequestHandler<GetAllBlogsQuery, IEnumerable<BlogResponseDto>>
+namespace CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs
 {
-    private readonly IBlogRepository _repository;
-
-    public GetAllBlogsQueryHandler(IBlogRepository repository)
+    public class GetAllBlogsQueryHandler
+        : IRequestHandler<GetAllBlogsQuery, List<Blog>>
     {
-        _repository = repository;
-    }
+        private readonly IBlogQueryRepository _repository;
 
-    public async Task<IEnumerable<BlogResponseDto>> Handle(
-        GetAllBlogsQuery request,
-        CancellationToken cancellationToken)
-    {
-        var blogs = await _repository.GetAllAsync();
-
-        return blogs.Select(blog => new BlogResponseDto
+        public GetAllBlogsQueryHandler(IBlogQueryRepository repository)
         {
-            Id = blog.Id,
-            Name = blog.Name,
-            Description = blog.Description,
-            Author = blog.Author,
-            ImageUrl = blog.ImageUrl
-        });
+            _repository = repository;
+        }
+
+        public async Task<List<Blog>> Handle(
+            GetAllBlogsQuery request,
+            CancellationToken cancellationToken)
+        {
+            return await _repository.GetAllAsync();
+        }
     }
 }

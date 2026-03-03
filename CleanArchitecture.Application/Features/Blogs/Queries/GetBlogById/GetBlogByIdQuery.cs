@@ -1,14 +1,15 @@
 ﻿using MediatR;
-using CleanArchitecture.Application.DTOs;
+using CleanArchitecture.Domain.Entities;
 
-namespace CleanArchitecture.Application.Features.Blogs.Queries.GetBlogById;
-
-public class GetBlogByIdQuery : IRequest<BlogResponseDto>
+namespace CleanArchitecture.Application.Features.Blogs.Queries.GetBlogById
 {
-    public int Id { get; set; }
-
-    public GetBlogByIdQuery(int id)
+    public class GetBlogByIdQuery : IRequest<Blog>
     {
-        Id = id;
+        public int Id { get; set; }
+
+        public GetBlogByIdQuery(int id)
+        {
+            Id = id;
+        }
     }
 }
