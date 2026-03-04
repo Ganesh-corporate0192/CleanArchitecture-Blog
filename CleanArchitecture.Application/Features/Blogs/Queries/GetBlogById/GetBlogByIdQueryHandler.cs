@@ -4,6 +4,7 @@ using CleanArchitecture.Domain.Entities;
 
 namespace CleanArchitecture.Application.Features.Blogs.Queries.GetBlogById
 {
+
     public class GetBlogByIdQueryHandler
         : IRequestHandler<GetBlogByIdQuery, Blog>
     {
