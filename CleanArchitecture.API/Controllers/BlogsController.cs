@@ -27,6 +27,7 @@ public class BlogsController(IMediator mediator) : ControllerBase
         return Ok(blog);
     }
 
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateBlogCommand command)
         => Ok(await _mediator.Send(command));
@@ -38,7 +39,7 @@ public class BlogsController(IMediator mediator) : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         await _mediator.Send(new DeleteBlogCommand(id));
