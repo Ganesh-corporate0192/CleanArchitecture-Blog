@@ -38,7 +38,7 @@ public class BlogsController(IMediator mediator) : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
         await _mediator.Send(new DeleteBlogCommand(id));

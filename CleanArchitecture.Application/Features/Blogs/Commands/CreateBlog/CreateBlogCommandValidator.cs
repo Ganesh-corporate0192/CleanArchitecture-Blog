@@ -8,7 +8,7 @@ public class CreateBlogCommandValidator
     public CreateBlogCommandValidator()
     {
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("Name is required")
+            .NotEmpty().WithMessage("Name is required!!")
             .MaximumLength(100);
 
         RuleFor(x => x.Description)
