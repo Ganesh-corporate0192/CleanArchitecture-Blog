@@ -32,10 +32,23 @@ public class BlogsController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> Create(CreateBlogCommand command)
         => Ok(await _mediator.Send(command));
 
+
+
     [HttpPut]
     public async Task<IActionResult> Update(UpdateBlogCommand command)
     {
         await _mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateMultiple(List<UpdateBlogCommand> commands)
+    {
+        foreach (var command in commands)
+        {
+            await _mediator.Send(command);
+        }
+
         return NoContent();
     }
 
