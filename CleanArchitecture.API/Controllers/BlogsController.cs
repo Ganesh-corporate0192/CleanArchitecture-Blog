@@ -58,4 +58,11 @@ public class BlogsController(IMediator mediator) : ControllerBase
         await _mediator.Send(new DeleteBlogCommand(id));
         return Ok();
     }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteMultiple([FromBody] List<int> ids)
+    {
+        await _mediator.Send(new DeleteMultipleBlogsCommand(ids));
+        return Ok();
+    }
 }

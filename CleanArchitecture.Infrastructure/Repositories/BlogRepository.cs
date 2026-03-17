@@ -14,10 +14,10 @@ namespace CleanArchitecture.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Blog>> GetAllAsync()
-        {
-            return await _context.Blogs.ToListAsync();
-        }
+        //public async Task<IEnumerable<Blog>> GetAllAsync()
+        //{
+        //    return await _context.Blogs.ToListAsync();
+        //}
 
         public async Task<Blog?> GetByIdAsync(int id)
         {
@@ -44,6 +44,19 @@ namespace CleanArchitecture.Infrastructure.Repositories
                 _context.Blogs.Remove(blog);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<Blog>> GetByIdsAsync(List<int> ids)
+        {
+            return await _context.Blogs
+                .Where(b => ids.Contains(b.Id))
+                .ToListAsync();
+        }
+
+        public async Task DeleteRangeAsync(List<Blog> blogs)
+        {
+            _context.Blogs.RemoveRange(blogs);
+            await _context.SaveChangesAsync();
         }
     }
 }

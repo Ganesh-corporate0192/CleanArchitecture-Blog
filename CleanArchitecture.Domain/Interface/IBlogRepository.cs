@@ -4,10 +4,12 @@ namespace CleanArchitecture.Domain.Interface
 {
     public interface IBlogRepository
     {
-        Task<IEnumerable<Blog>> GetAllAsync();
+       // Task<IEnumerable<Blog>> GetAllAsync();
         Task<Blog?> GetByIdAsync(int id);
         Task AddAsync(Blog blog);
         Task UpdateAsync(Blog blog);
         Task DeleteAsync(int id);
+        Task<List<Blog>> GetByIdsAsync(List<int> ids);
+        Task DeleteRangeAsync(List<Blog> blogs);
     }
 }
