@@ -1,10 +1,12 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using CleanArchitecture.Application.DTOs;
 using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
-using CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.DeleteBlog;
+using CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
+using CleanArchitecture.Application.Features.Blogs.Commands.UpdateMultipleBlogs;
 using CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs;
 using CleanArchitecture.Application.Features.Blogs.Queries.GetBlogById;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]/[action]")]
@@ -50,6 +52,17 @@ public class BlogsController(IMediator mediator) : ControllerBase
         }
 
         return NoContent();
+    }
+
+    [HttpPost("upsert-multiple")]
+    public async Task<IActionResult> UpsertMultiple([FromBody] List<UpsertBlogDto> blogs)
+    {
+        var result=await _mediator.Send(new UpsertMultipleBlogsCommand(blogs));
+        return Ok(new
+        {
+            message = $"Created {result.Created}, Updated {result.Updated}",
+            data = result
+        });
     }
 
     [HttpDelete("{id}")]

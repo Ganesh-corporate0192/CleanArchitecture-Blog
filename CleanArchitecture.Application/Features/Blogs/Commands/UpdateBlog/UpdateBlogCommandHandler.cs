@@ -1,18 +1,21 @@
-﻿using MediatR;
+﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.DTOs;
+using CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
 using CleanArchitecture.Domain.Interface;
-using CleanArchitecture.Application.Common.Exceptions;
-using CleanArchitecture.Domain.Entities;
-
-namespace CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
+using MediatR;
 
 public class UpdateBlogCommandHandler
     : IRequestHandler<UpdateBlogCommand>
 {
     private readonly IBlogRepository _repository;
+    private readonly IBlogUpsertService _upsertService;
 
-    public UpdateBlogCommandHandler(IBlogRepository repository)
+    public UpdateBlogCommandHandler(
+        IBlogRepository repository,
+        IBlogUpsertService upsertService)
     {
         _repository = repository;
+        _upsertService = upsertService;
     }
 
     public async Task Handle(
@@ -24,10 +27,16 @@ public class UpdateBlogCommandHandler
         if (blog is null)
             throw new NotFoundException("Blog", request.Id);
 
-        blog.Name = request.Name;
-        blog.Description = request.Description;
-        blog.Author = request.Author;
-        blog.ImageUrl = request.ImageUrl;
+        var dto = new UpsertBlogDto
+        {
+            Id = request.Id,
+            Name = request.Name,
+            Description = request.Description,
+            Author = request.Author,
+            ImageUrl = request.ImageUrl
+        };
+
+        await _upsertService.UpdateAsync(blog, dto);
 
         await _repository.UpdateAsync(blog);
     }

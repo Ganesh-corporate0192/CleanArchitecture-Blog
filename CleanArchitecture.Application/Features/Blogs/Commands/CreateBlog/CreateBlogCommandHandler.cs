@@ -1,30 +1,31 @@
-﻿using AutoMapper;
+﻿using CleanArchitecture.Application.DTOs;
 using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
-using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Interface;
 using MediatR;
 
 public class CreateBlogCommandHandler
     : IRequestHandler<CreateBlogCommand, int>
 {
-    private readonly IBlogRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly IBlogUpsertService _upsertService;
 
-    public CreateBlogCommandHandler(
-        IBlogRepository repository,
-        IMapper mapper)
+    public CreateBlogCommandHandler(IBlogUpsertService upsertService)
     {
-        _repository = repository;
-        _mapper = mapper;
+        _upsertService = upsertService;
     }
 
     public async Task<int> Handle(
         CreateBlogCommand request,
         CancellationToken cancellationToken)
     {
-        var blog = _mapper.Map<Blog>(request);
+        var dto = new UpsertBlogDto
+        {
+            Name = request.Name,
+            Description = request.Description,
+            Author = request.Author,
+            ImageUrl = request.ImageUrl
+        };
 
-        await _repository.AddAsync(blog);
+        var blog = await _upsertService.CreateAsync(dto);
 
         return blog.Id;
     }

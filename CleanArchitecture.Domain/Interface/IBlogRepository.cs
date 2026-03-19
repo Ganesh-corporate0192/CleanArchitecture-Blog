@@ -11,5 +11,6 @@ namespace CleanArchitecture.Domain.Interface
         Task DeleteAsync(int id);
         Task<List<Blog>> GetByIdsAsync(List<int> ids);
         Task DeleteRangeAsync(List<Blog> blogs);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

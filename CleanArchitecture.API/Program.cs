@@ -51,7 +51,7 @@ builder.Services.AddAutoMapper(
 builder.Services.AddScoped<IBlogRepository, BlogRepository>(); // EF
 builder.Services.AddScoped<IBlogQueryRepository, BlogQueryRepository>(); // Dapper
 builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-
+builder.Services.AddScoped<IBlogUpsertService, BlogUpsertService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

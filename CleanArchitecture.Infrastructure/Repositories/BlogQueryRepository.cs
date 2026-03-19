@@ -18,7 +18,7 @@ namespace CleanArchitecture.Infrastructure.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
 
-            var sql = "SELECT * FROM Blogs";
+            var sql = "SELECT * FROM Blogs order by Id desc";
 
             var result = await connection.QueryAsync<Blog>(sql);
 

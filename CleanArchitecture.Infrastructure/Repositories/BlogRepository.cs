@@ -58,5 +58,10 @@ namespace CleanArchitecture.Infrastructure.Repositories
             _context.Blogs.RemoveRange(blogs);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }
