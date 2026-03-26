@@ -54,14 +54,14 @@ public class BlogsController(IMediator mediator) : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("upsert-multiple")]
+    [HttpPost]
     public async Task<IActionResult> UpsertMultiple([FromBody] List<UpsertBlogDto> blogs)
     {
         var result=await _mediator.Send(new UpsertMultipleBlogsCommand(blogs));
         return Ok(new
         {
-            message = $"Created {result.Created}, Updated {result.Updated}",
-            data = result
+            success = true,
+            blogs = result
         });
     }
 

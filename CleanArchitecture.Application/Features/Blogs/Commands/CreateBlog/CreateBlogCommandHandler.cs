@@ -1,23 +1,23 @@
-﻿using CleanArchitecture.Application.DTOs;
-using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
+﻿using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Interface;
 using MediatR;
 
-public class CreateBlogCommandHandler
-    : IRequestHandler<CreateBlogCommand, int>
-{
-    private readonly IBlogUpsertService _upsertService;
+namespace CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
 
-    public CreateBlogCommandHandler(IBlogUpsertService upsertService)
+public class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, int>
+{
+    private readonly IBlogRepository _repository;
+
+    public CreateBlogCommandHandler(IBlogRepository repository)
     {
-        _upsertService = upsertService;
+        _repository = repository;
     }
 
     public async Task<int> Handle(
         CreateBlogCommand request,
         CancellationToken cancellationToken)
     {
-        var dto = new UpsertBlogDto
+        var blog = new Blog
         {
             Name = request.Name,
             Description = request.Description,
@@ -25,7 +25,7 @@ public class CreateBlogCommandHandler
             ImageUrl = request.ImageUrl
         };
 
-        var blog = await _upsertService.CreateAsync(dto);
+        await _repository.AddAsync(blog);
 
         return blog.Id;
     }

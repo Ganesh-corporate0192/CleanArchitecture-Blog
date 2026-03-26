@@ -1,6 +1,7 @@
-﻿using CleanArchitecture.Application.DTOs;
+﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
+using CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.UpdateMultipleBlogs;
-using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Interface;
 using MediatR;
 
@@ -8,14 +9,14 @@ public class UpsertMultipleBlogsCommandHandler
     : IRequestHandler<UpsertMultipleBlogsCommand, UpsertResult>
 {
     private readonly IBlogRepository _repository;
-    private readonly IBlogUpsertService _upsertService;
+    private readonly IMediator _mediator;
 
     public UpsertMultipleBlogsCommandHandler(
         IBlogRepository repository,
-        IBlogUpsertService upsertService)
+        IMediator mediator)
     {
         _repository = repository;
-        _upsertService = upsertService;
+        _mediator = mediator;
     }
 
     public async Task<UpsertResult> Handle(
@@ -23,51 +24,60 @@ public class UpsertMultipleBlogsCommandHandler
         CancellationToken cancellationToken)
     {
         var result = new UpsertResult();
-        var createdBlogs = new List<Blog>();
 
-        // 🔹 Step 1: Get IDs
-        var ids = request.Blogs
-            .Where(x => x.Id > 0)
-            .Select(x => x.Id)
-            .Distinct()
-            .ToList();
+        if (request.Blogs == null || !request.Blogs.Any())
+            return result;
 
-        // 🔹 Step 2: Fetch existing
-        var existingBlogs = await _repository.GetByIdsAsync(ids);
-        var existingDict = existingBlogs.ToDictionary(b => b.Id);
+        //var ids = request.Blogs
+        //    .Where(x => x.Id > 0)
+        //    .Select(x => x.Id)
+        //    .Distinct()
+        //    .ToList();
 
-        // 🔹 Step 3: Process
+        //var existingBlogs = await _repository.GetByIdsAsync(ids);
+        //var existingIds = existingBlogs
+        //    .Select(x => x.Id)
+        //    .ToHashSet();
+
         foreach (var dto in request.Blogs)
         {
-            // 🟢 CREATE
+            Console.WriteLine($"DTO Id = {dto.Id}, Name = {dto.Name}");
+
             if (dto.Id == 0)
             {
-                var blog = await _upsertService.CreateAsync(dto);
-                createdBlogs.Add(blog);
+                var createdId = await _mediator.Send(
+                    new CreateBlogCommand
+                    {
+                        Name = dto.Name,
+                        Description = dto.Description,
+                        Author = dto.Author,
+                        ImageUrl = dto.ImageUrl
+                    },
+                    cancellationToken);
+
                 result.Created++;
+                result.CreatedIds.Add(createdId);
                 continue;
             }
 
-            // 🟡 UPDATE
-            if (existingDict.TryGetValue(dto.Id, out var existing))
+            else
             {
-                await _upsertService.UpdateAsync(existing, dto);
+
+                await _mediator.Send(
+                    new UpdateBlogCommand
+                    {
+                        Id = dto.Id,
+                        Name = dto.Name,
+                        Description = dto.Description,
+                        Author = dto.Author,
+                        ImageUrl = dto.ImageUrl
+                    },
+                    cancellationToken);
 
                 result.Updated++;
-                result.UpdatedIds.Add(existing.Id);
-                continue;
+                result.UpdatedIds.Add(dto.Id);
             }
-
-            // 🔵 FALLBACK CREATE
-            var newBlog = await _upsertService.CreateAsync(dto);
-            createdBlogs.Add(newBlog);
-            result.Created++;
         }
-
-        // 🔹 Save once
-        await _repository.SaveChangesAsync();
-
-        result.CreatedIds = createdBlogs.Select(b => b.Id).ToList();
 
         return result;
     }
