@@ -2,7 +2,7 @@
 
 namespace CleanArchitecture.Application.Common
 {
-    public interface IBlogQueryRepository
+    public interface IBlogQueryService
     {
         Task<List<Blog>> GetAllAsync();
         Task<Blog?> GetByIdAsync(int id);

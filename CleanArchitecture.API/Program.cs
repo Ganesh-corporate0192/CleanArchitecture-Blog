@@ -2,7 +2,6 @@
 using CleanArchitecture.Application.Behaviors;
 using CleanArchitecture.Application.Common;
 using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
-using CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs;
 using CleanArchitecture.Application.Mappings;
 using CleanArchitecture.Domain.Interface;
 using CleanArchitecture.Infrastructure.Data;
@@ -49,7 +48,7 @@ builder.Services.AddAutoMapper(
 
 // Dependency Injection
 builder.Services.AddScoped<IBlogRepository, BlogRepository>(); // EF
-builder.Services.AddScoped<IBlogQueryRepository, BlogQueryRepository>(); // Dapper
+builder.Services.AddScoped<IBlogQueryService, BlogQueryRepository>(); // Dapper
 builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
 builder.Services.AddScoped<IBlogUpsertService, BlogUpsertService>();
 builder.Services.AddControllers();
@@ -58,7 +57,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionMiddleware>();  // Always first
+app.UseMiddleware<ExceptionMiddleware>(); 
 
 if (app.Environment.IsDevelopment())
 {

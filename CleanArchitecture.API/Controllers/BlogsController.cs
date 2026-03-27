@@ -1,30 +1,42 @@
-﻿using CleanArchitecture.Application.DTOs;
+﻿using CleanArchitecture.Application.Common;
+using CleanArchitecture.Application.DTOs;
 using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.DeleteBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.UpdateMultipleBlogs;
-using CleanArchitecture.Application.Features.Blogs.Queries.GetAllBlogs;
-using CleanArchitecture.Application.Features.Blogs.Queries.GetBlogById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class BlogsController(IMediator mediator) : ControllerBase
+public class BlogsController : ControllerBase
 {
-    private readonly IMediator _mediator = mediator;
+    private readonly IMediator _mediator ;
+    private readonly IBlogQueryService _queryService;
+
+    public BlogsController(
+        IMediator mediator,
+        IBlogQueryService queryService)
+    {
+        _mediator = mediator;
+        _queryService = queryService;
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
-        => Ok(await _mediator.Send(new GetAllBlogsQuery()));
+    {
+        var blogs = await _queryService.GetAllAsync();
+        return Ok(blogs);
+    }
+   
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var blog = await _mediator.Send(new GetBlogByIdQuery(id));
+        var blog = await _queryService.GetByIdAsync(id);
 
-        if (blog == null)
-            return NotFound(new { Message = "Blog not found" });
+            if (blog == null)
+            return NotFound();
 
         return Ok(blog);
     }
@@ -43,18 +55,6 @@ public class BlogsController(IMediator mediator) : ControllerBase
         return Ok(updatedId);
     }
 
-    //[HttpPut]
-    //public async Task<IActionResult> UpdateMultiple(List<UpdateBlogCommand> commands)
-    //{
-    //    var updatedIds = new List<int>();
-    //    foreach (var command in commands)
-    //    {
-    //    var id = await _mediator.Send(command);
-    //        updatedIds.Add(id);
-    //    }
-
-    //    return Ok(updatedIds);
-    //}
 
     [HttpPost]
     public async Task<IActionResult> UpsertMultiple([FromBody] List<UpsertBlogDto> blogs)

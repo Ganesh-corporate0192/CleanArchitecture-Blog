@@ -5,7 +5,7 @@ using System.Data;
 
 namespace CleanArchitecture.Infrastructure.Repositories
 {
-    public class BlogQueryRepository : IBlogQueryRepository
+    public class BlogQueryRepository : IBlogQueryService
     {
         private readonly IDbConnectionFactory _connectionFactory;
 
