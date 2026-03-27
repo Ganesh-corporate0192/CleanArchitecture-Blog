@@ -39,20 +39,22 @@ public class BlogsController(IMediator mediator) : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update(UpdateBlogCommand command)
     {
-        await _mediator.Send(command);
-        return NoContent();
+        var updatedId=await _mediator.Send(command);
+        return Ok(updatedId);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateMultiple(List<UpdateBlogCommand> commands)
-    {
-        foreach (var command in commands)
-        {
-            await _mediator.Send(command);
-        }
+    //[HttpPut]
+    //public async Task<IActionResult> UpdateMultiple(List<UpdateBlogCommand> commands)
+    //{
+    //    var updatedIds = new List<int>();
+    //    foreach (var command in commands)
+    //    {
+    //    var id = await _mediator.Send(command);
+    //        updatedIds.Add(id);
+    //    }
 
-        return NoContent();
-    }
+    //    return Ok(updatedIds);
+    //}
 
     [HttpPost]
     public async Task<IActionResult> UpsertMultiple([FromBody] List<UpsertBlogDto> blogs)
@@ -68,14 +70,14 @@ public class BlogsController(IMediator mediator) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        await _mediator.Send(new DeleteBlogCommand(id));
-        return Ok();
+        var result= await _mediator.Send(new DeleteBlogCommand(id));
+        return Ok(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> DeleteMultiple([FromBody] List<int> ids)
     {
-        await _mediator.Send(new DeleteMultipleBlogsCommand(ids));
-        return Ok();
+        var deletedCount=await _mediator.Send(new DeleteMultipleBlogsCommand(ids));
+        return Ok(deletedCount);
     }
 }

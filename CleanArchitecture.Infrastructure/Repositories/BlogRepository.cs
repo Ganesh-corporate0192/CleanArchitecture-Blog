@@ -14,10 +14,6 @@ namespace CleanArchitecture.Infrastructure.Repositories
             _context = context;
         }
 
-        //public async Task<IEnumerable<Blog>> GetAllAsync()
-        //{
-        //    return await _context.Blogs.ToListAsync();
-        //}
 
         public async Task<Blog?> GetByIdAsync(int id)
         {
@@ -27,23 +23,24 @@ namespace CleanArchitecture.Infrastructure.Repositories
         public async Task AddAsync(Blog blog)
         {
             await _context.Blogs.AddAsync(blog);
-            await _context.SaveChangesAsync();
+            
         }
 
-        public async Task UpdateAsync(Blog blog)
+        public  Task UpdateAsync(Blog blog)
         {
             _context.Blogs.Update(blog);
-            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var blog = await _context.Blogs.FindAsync(id);
-            if (blog != null)
-            {
-                _context.Blogs.Remove(blog);
-                await _context.SaveChangesAsync();
-            }
+            if (blog == null)
+                return false;
+
+            _context.Blogs.Remove(blog);
+
+            return true;
         }
 
         public async Task<List<Blog>> GetByIdsAsync(List<int> ids)
@@ -53,10 +50,10 @@ namespace CleanArchitecture.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task DeleteRangeAsync(List<Blog> blogs)
+        public Task DeleteRangeAsync(List<Blog> blogs)
         {
             _context.Blogs.RemoveRange(blogs);
-            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

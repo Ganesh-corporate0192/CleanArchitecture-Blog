@@ -2,6 +2,7 @@
 using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.UpdateMultipleBlogs;
+using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Interface;
 using MediatR;
 
@@ -56,6 +57,7 @@ public class UpsertMultipleBlogsCommandHandler
                     cancellationToken);
 
                 result.Created++;
+               
                 result.CreatedIds.Add(createdId);
                 continue;
             }

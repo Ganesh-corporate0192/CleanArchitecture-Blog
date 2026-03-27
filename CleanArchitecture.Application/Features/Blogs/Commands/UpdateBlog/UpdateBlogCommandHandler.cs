@@ -4,7 +4,7 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
 
-public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand>
+public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand,int>
 {
     private readonly IBlogRepository _repository;
 
@@ -13,7 +13,7 @@ public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand>
         _repository = repository;
     }
 
-    public async Task Handle(
+    public async Task<int> Handle(
         UpdateBlogCommand request,
         CancellationToken cancellationToken)
     {
@@ -22,11 +22,15 @@ public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand>
         if (blog is null)
             throw new NotFoundException("Blog", request.Id);
 
-        blog.Name = request.Name;
-        blog.Description = request.Description;
-        blog.Author = request.Author;
-        blog.ImageUrl = request.ImageUrl;
+        blog.Update(
+           request.Name,
+           request.Description,
+           request.Author,
+           request.ImageUrl
+       );
 
         await _repository.UpdateAsync(blog);
+
+        return blog.Id;
     }
 }

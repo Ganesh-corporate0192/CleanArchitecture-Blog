@@ -2,7 +2,7 @@
 
 namespace CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
 
-public class UpdateBlogCommand : IRequest
+public class UpdateBlogCommand : IRequest<int>
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;

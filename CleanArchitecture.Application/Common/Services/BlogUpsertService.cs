@@ -14,12 +14,12 @@ public class BlogUpsertService : IBlogUpsertService
     public async Task<Blog> CreateAsync(UpsertBlogDto dto)
     {
         var blog = new Blog
-        {
-            Name = dto.Name,
-            Description = dto.Description,
-            Author = dto.Author,
-            ImageUrl = dto.ImageUrl
-        };
+        (
+             dto.Name,
+           dto.Description,
+             dto.Author,
+            dto.ImageUrl
+        );
 
         await _repository.AddAsync(blog);
         return blog;
@@ -27,10 +27,13 @@ public class BlogUpsertService : IBlogUpsertService
 
     public Task UpdateAsync(Blog existing, UpsertBlogDto dto)
     {
-        existing.Name = dto.Name;
-        existing.Description = dto.Description;
-        existing.Author = dto.Author;
-        existing.ImageUrl = dto.ImageUrl;
+        existing.Update(
+        dto.Name,
+        dto.Description,
+        dto.Author,
+        dto.ImageUrl
+    );
+
 
         return Task.CompletedTask;
     }

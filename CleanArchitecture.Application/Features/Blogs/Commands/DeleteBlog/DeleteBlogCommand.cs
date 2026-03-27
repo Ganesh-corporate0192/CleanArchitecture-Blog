@@ -2,7 +2,7 @@
 
 namespace CleanArchitecture.Application.Features.Blogs.Commands.DeleteBlog;
 
-public class DeleteBlogCommand : IRequest
+public class DeleteBlogCommand : IRequest<bool>
 {
     public int Id { get; set; }
 

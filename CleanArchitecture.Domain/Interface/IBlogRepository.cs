@@ -8,7 +8,7 @@ namespace CleanArchitecture.Domain.Interface
         Task<Blog?> GetByIdAsync(int id);
         Task AddAsync(Blog blog);
         Task UpdateAsync(Blog blog);
-        Task DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
         Task<List<Blog>> GetByIdsAsync(List<int> ids);
         Task DeleteRangeAsync(List<Blog> blogs);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

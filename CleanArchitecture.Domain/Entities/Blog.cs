@@ -2,34 +2,29 @@
 {
     public class Blog
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
-        private string _name = string.Empty;
-        public string Name
+        public string Name { get; private set; } = string.Empty;
+        public string Description { get; private set; } = string.Empty;
+        public string Author { get; private set; } = string.Empty;
+        public string ImageUrl { get; private set; } = string.Empty;
+
+        // Constructor for creation
+        public Blog(string name, string description, string author, string imageUrl)
         {
-            get => _name;
-            set => _name = value?.Trim() ?? string.Empty;
+            Update(name, description, author, imageUrl);
         }
 
-        private string _description = string.Empty;
-        public string Description
-        {
-            get => _description;
-            set => _description = value?.Trim() ?? string.Empty;
-        }
+        // EF Core requires parameterless constructor
+        private Blog() { }
 
-        private string _author = string.Empty;
-        public string Author
+        // Update method (central logic)
+        public void Update(string name, string description, string author, string imageUrl)
         {
-            get => _author;
-            set => _author = value?.Trim() ?? string.Empty;
-        }
-
-        private string _imageUrl = string.Empty;
-        public string ImageUrl
-        {
-            get => _imageUrl;
-            set => _imageUrl = value?.Trim() ?? string.Empty;
+            Name = name?.Trim() ?? string.Empty;
+            Description = description?.Trim() ?? string.Empty;
+            Author = author?.Trim() ?? string.Empty;
+            ImageUrl = imageUrl?.Trim() ?? string.Empty;
         }
     }
 }

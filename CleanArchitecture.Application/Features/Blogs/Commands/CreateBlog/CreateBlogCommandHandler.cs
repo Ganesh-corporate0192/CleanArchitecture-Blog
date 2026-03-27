@@ -18,14 +18,16 @@ public class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, int>
         CancellationToken cancellationToken)
     {
         var blog = new Blog
-        {
-            Name = request.Name,
-            Description = request.Description,
-            Author = request.Author,
-            ImageUrl = request.ImageUrl
-        };
+        (
+            request.Name,
+            request.Description,
+            request.Author,
+            request.ImageUrl
+        );
 
         await _repository.AddAsync(blog);
+
+        await _repository.SaveChangesAsync(cancellationToken);
 
         return blog.Id;
     }
