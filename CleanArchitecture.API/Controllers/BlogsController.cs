@@ -1,9 +1,11 @@
 ﻿using CleanArchitecture.Application.Common;
+using CleanArchitecture.Application.Common.Models.Queries.Responses;
 using CleanArchitecture.Application.DTOs;
 using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.DeleteBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.UpdateBlog;
 using CleanArchitecture.Application.Features.Blogs.Commands.UpdateMultipleBlogs;
+using CleanArchitecture.Application.Common.QueryRequestModels.Queries.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,20 +25,25 @@ public class BlogsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<IEnumerable<BlogResponse>>> GetAll()
     {
+       
+
         var blogs = await _queryService.GetAllAsync();
+
         return Ok(blogs);
     }
-   
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<ActionResult<BlogResponse>> GetById(int id)
     {
+        if (id <= 0)
+            return BadRequest("Blog Id must be greater than 0.");
+
         var blog = await _queryService.GetByIdAsync(id);
 
-            if (blog == null)
-            return NotFound();
+        if (blog == null)
+            return NotFound($"Blog with Id {id} was not found.");
 
         return Ok(blog);
     }

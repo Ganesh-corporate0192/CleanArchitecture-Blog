@@ -5,6 +5,7 @@ using CleanArchitecture.Application.Features.Blogs.Commands.CreateBlog;
 using CleanArchitecture.Application.Mappings;
 using CleanArchitecture.Domain.Interface;
 using CleanArchitecture.Infrastructure.Data;
+using CleanArchitecture.Infrastructure.QueryHelpers;
 using CleanArchitecture.Infrastructure.Repositories;
 using FluentValidation;
 using MediatR;
@@ -48,9 +49,10 @@ builder.Services.AddAutoMapper(
 
 // Dependency Injection
 builder.Services.AddScoped<IBlogRepository, BlogRepository>(); // EF
-builder.Services.AddScoped<IBlogQueryService, BlogQueryRepository>(); // Dapper
+builder.Services.AddScoped<IBlogQueryService, BlogQueryService>(); // Dapper
+builder.Services.AddScoped<IQueryContext, QueryContext>();
+builder.Services.AddScoped<IQueryHelper, QueryHelper>();
 builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-builder.Services.AddScoped<IBlogUpsertService, BlogUpsertService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -18,7 +18,7 @@
         // EF Core requires parameterless constructor
         private Blog() { }
 
-        // Update method (central logic)
+        //  Update method (central logic)
         public void Update(string name, string description, string author, string imageUrl)
         {
             Name = name?.Trim() ?? string.Empty;

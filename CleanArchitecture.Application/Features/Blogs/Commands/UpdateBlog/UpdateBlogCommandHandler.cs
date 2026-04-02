@@ -31,6 +31,8 @@ public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand,int>
 
         await _repository.UpdateAsync(blog);
 
+        await _repository.SaveChangesAsync(cancellationToken);
+
         return blog.Id;
     }
 }
